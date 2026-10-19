@@ -1,0 +1,14 @@
+# read  -verific
+read_verilog ./test.v
+
+# elaborate design hierarchy
+hierarchy -check
+proc
+flatten
+memory
+# (llmdata) newer Yosys: case -> $pmux and enables/resets folded into DFF cells;
+# lower both (and async resets, via async2sync) to plain $mux / $dff so the netlist uses only what RTL2CDFG reads
+pmuxtree
+async2sync
+dffunmap
+write_verilog ./test_ast.v
